@@ -1,0 +1,3 @@
+import type { MetadataRoute } from "next";
+import { posts, siteConfig } from "@/lib/site-content";
+export default function sitemap(): MetadataRoute.Sitemap { const routes = ["", "/about", "/services", "/blog", "/contact", "/privacy", "/terms"]; return [...routes.map((route) => ({ url: `${siteConfig.url}${route}`, lastModified: new Date(), changeFrequency: route === "/blog" ? "weekly" as const : "monthly" as const, priority: route === "" ? 1 : .8 })), ...posts.map((post) => ({ url: `${siteConfig.url}/blog/${post.slug}`, lastModified: new Date(post.isoDate), changeFrequency: "monthly" as const, priority: .7 }))]; }

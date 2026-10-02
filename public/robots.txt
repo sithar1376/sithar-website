@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-marketing-expert-portfolio.pretty-bean-7918.chatgpt.site/sitemap.xml

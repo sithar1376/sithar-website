@@ -1,0 +1,50 @@
+import { BarChart3, Bot, ChartNoAxesCombined, FileText, Funnel, Mail, Megaphone, Search, Sparkles, Workflow, type LucideIcon } from "lucide-react";
+
+export const siteConfig = {
+  name: "Your Name",
+  initials: "YN",
+  title: "AI Marketing Expert",
+  description: "Practical AI and digital marketing strategies that help small and medium-sized businesses attract better leads, convert more customers, and build sustainable growth.",
+  url: "https://ai-marketing-expert-portfolio.pretty-bean-7918.chatgpt.site",
+  bookingUrl: "",
+  email: "hello@yourdomain.com",
+  linkedin: "",
+};
+
+export type Service = { slug: string; title: string; summary: string; problem: string; approach: string; benefits: string[]; icon: LucideIcon };
+export const services: Service[] = [
+  { slug: "ai-marketing-strategy", title: "AI Marketing Strategy", summary: "Choose and apply AI where it creates real business value—not more noise.", problem: "Teams often test disconnected AI tools without a clear plan, owner, or measurable goal.", approach: "I map your customer journey, identify high-value AI opportunities, and create a focused adoption roadmap.", benefits: ["Clear priorities", "Faster execution", "Smarter use of team time"], icon: Sparkles },
+  { slug: "digital-marketing-strategy", title: "Digital Marketing Strategy", summary: "Connect your channels around one practical plan for reaching and converting ideal customers.", problem: "Marketing feels fragmented, reactive, or difficult to measure across channels.", approach: "I build an integrated plan around your audience, offer, positioning, channels, and growth targets.", benefits: ["Sharper positioning", "Aligned channels", "Measurable priorities"], icon: ChartNoAxesCombined },
+  { slug: "lead-generation", title: "Lead Generation Strategy", summary: "Build a repeatable path from audience attention to qualified conversations.", problem: "Traffic is inconsistent—or it arrives without turning into meaningful sales opportunities.", approach: "I strengthen targeting, offers, landing journeys, capture points, and follow-up around buyer intent.", benefits: ["Better-fit leads", "Clearer funnels", "More consistent outreach"], icon: Funnel },
+  { slug: "marketing-automation", title: "Marketing Automation", summary: "Reduce repetitive work while keeping customer communication timely and personal.", problem: "Valuable leads go cold because follow-up is manual, inconsistent, or spread across too many tools.", approach: "I design simple automations for capture, qualification, nurturing, reminders, and reporting.", benefits: ["Faster follow-up", "Less manual work", "Consistent customer journeys"], icon: Workflow },
+  { slug: "content-marketing", title: "Content & AI Marketing", summary: "Create useful content more efficiently without losing your expertise or voice.", problem: "Content takes too long to produce and often lacks a clear role in the buyer journey.", approach: "I create an audience-led content system and responsible AI workflow for research, production, and distribution.", benefits: ["Stronger authority", "Sustainable production", "Content tied to demand"], icon: FileText },
+  { slug: "seo", title: "SEO Strategy", summary: "Improve discoverability with useful content and a technically sound search foundation.", problem: "Potential customers cannot find the business when they are actively searching for help.", approach: "I prioritize search intent, site structure, content opportunities, and practical technical improvements.", benefits: ["Relevant visibility", "Compounding traffic", "Stronger content architecture"], icon: Search },
+  { slug: "social-media", title: "Social Media Strategy", summary: "Turn social activity into a focused system for trust, reach, and demand.", problem: "Posting consumes time without a clear audience, message, or next step.", approach: "I define channel roles, content pillars, repurposing workflows, and conversion paths.", benefits: ["Consistent presence", "Clearer messaging", "Efficient repurposing"], icon: Megaphone },
+  { slug: "email-marketing", title: "Email Marketing", summary: "Nurture leads with relevant messages that support confident buying decisions.", problem: "Email lists sit unused or receive generic campaigns that do not move prospects forward.", approach: "I plan welcome, nurture, education, and re-engagement journeys around customer needs.", benefits: ["Better nurturing", "More useful touchpoints", "Owned audience growth"], icon: Mail },
+  { slug: "conversion-optimization", title: "Conversion Optimization", summary: "Make websites, landing pages, and funnels easier to understand and act on.", problem: "Visitors arrive but hesitate, leave, or never reach the next meaningful step.", approach: "I diagnose friction in the message, offer, page hierarchy, forms, and customer journey.", benefits: ["Clearer decisions", "Lower friction", "More value from existing traffic"], icon: Bot },
+  { slug: "analytics", title: "Marketing Analytics", summary: "Turn scattered metrics into decisions your team can confidently act on.", problem: "Reports show activity but do not reveal what is driving leads, customers, or revenue.", approach: "I define useful measures, reporting rhythms, and a test-and-learn optimization process.", benefits: ["Useful reporting", "Better decisions", "Continuous improvement"], icon: BarChart3 },
+];
+
+export const categories = ["AI Marketing", "Digital Marketing", "Lead Generation", "Marketing Automation", "SEO", "Content Marketing", "Conversion Optimization", "Business Growth"];
+export type Post = { slug: string; category: string; title: string; excerpt: string; date: string; isoDate: string; readTime: string; featured?: boolean; accent: string; sections: { heading: string; paragraphs: string[] }[] };
+export const posts: Post[] = [
+  { slug: "practical-ai-marketing-plan", category: "AI Marketing", title: "A Practical AI Marketing Plan Starts with the Customer—not the Tool", excerpt: "A simple framework for finding the AI opportunities that improve your customer journey and business results.", date: "September 18, 2026", isoDate: "2026-09-18", readTime: "6 min read", featured: true, accent: "from-blue-600 to-cyan-400", sections: [
+    { heading: "Start with a business constraint", paragraphs: ["The best AI marketing opportunities are rarely found by browsing a list of tools. Start with a constraint: slow follow-up, inconsistent content, weak qualification, or a customer question your team answers repeatedly.", "A clear constraint gives you a useful test. If AI cannot improve the speed, quality, cost, or consistency of that activity, it may not deserve priority."] },
+    { heading: "Map the customer journey", paragraphs: ["Look at what a prospect needs before they discover you, while they compare options, and after they raise their hand. This reveals where better research, personalization, content, or automation could remove friction."] },
+    { heading: "Choose one measurable pilot", paragraphs: ["Select a small use case with a responsible owner and a meaningful measure. Learn from it before adding more tools. The goal is a repeatable operating improvement—not a one-off demonstration."] },
+  ] },
+  { slug: "website-conversion-friction", category: "Conversion Optimization", title: "Five Quiet Conversion Problems That Cost Service Businesses Leads", excerpt: "How unclear offers, hidden proof, and high-friction forms can weaken an otherwise strong website.", date: "September 3, 2026", isoDate: "2026-09-03", readTime: "5 min read", accent: "from-violet-600 to-blue-500", sections: [
+    { heading: "Clarity is the first conversion lever", paragraphs: ["Visitors should understand who you help, the problem you solve, and the next step within seconds. Clever language often creates more work for the reader."] },
+    { heading: "Match proof to the decision", paragraphs: ["Generic praise is less useful than proof that addresses the concern next to it. Place process details, examples, or evidence where uncertainty naturally appears."] },
+    { heading: "Make the next step feel proportionate", paragraphs: ["A short consultation request should not feel like a loan application. Ask only for information you will genuinely use, explain what happens next, and provide a clear alternative path."] },
+  ] },
+  { slug: "automation-without-losing-human-touch", category: "Marketing Automation", title: "How to Automate Follow-up Without Losing the Human Touch", excerpt: "A useful automation supports a conversation. It should never make a prospect feel trapped in a sequence.", date: "August 20, 2026", isoDate: "2026-08-20", readTime: "7 min read", accent: "from-cyan-500 to-emerald-400", sections: [
+    { heading: "Automate the handoff, not the relationship", paragraphs: ["Use automation to acknowledge, route, remind, and prepare. Keep judgment, empathy, and important decisions with people."] },
+    { heading: "Use behavior as context", paragraphs: ["Relevant follow-up reflects what a prospect asked for or explored. Avoid pretending an automated message is personal when it is not."] },
+    { heading: "Design an exit", paragraphs: ["Every sequence needs clear stop conditions, human escalation, and preference controls. Good automation reduces pressure while improving responsiveness."] },
+  ] },
+  { slug: "lead-generation-system", category: "Lead Generation", title: "From Random Enquiries to a Lead Generation System", excerpt: "The four connected parts that make lead generation more consistent and easier to improve.", date: "August 7, 2026", isoDate: "2026-08-07", readTime: "6 min read", accent: "from-indigo-600 to-violet-500", sections: [
+    { heading: "Define a useful audience", paragraphs: ["A focused audience is specific enough to guide your message but broad enough to support growth. Start with urgent problems and buying context rather than demographics alone."] },
+    { heading: "Build a connected path", paragraphs: ["An offer, channel, landing experience, and follow-up system should reinforce one another. Improving one isolated piece rarely fixes a broken journey."] },
+  ] },
+];
