@@ -5,7 +5,7 @@ export const siteConfig = {
   initials: "YN",
   title: "AI Marketing Expert",
   description: "Practical AI and digital marketing strategies that help small and medium-sized businesses attract better leads, convert more customers, and build sustainable growth.",
-  url: "https://ai-marketing-expert-portfolio.pretty-bean-7918.chatgpt.site",
+  url: "https://ai-marketing-expert-portfolio.matthewbailey33.chatgpt.site",
   bookingUrl: "",
   email: "hello@yourdomain.com",
   linkedin: "",

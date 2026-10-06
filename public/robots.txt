@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-marketing-expert-portfolio.pretty-bean-7918.chatgpt.site/sitemap.xml
+Sitemap: https://ai-marketing-expert-portfolio.matthewbailey33.chatgpt.site/sitemap.xml
