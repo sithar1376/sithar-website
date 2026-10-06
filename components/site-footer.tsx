@@ -1,4 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BookingLink } from "@/components/booking-link";
-import { services, siteConfig } from "@/lib/site-content";
-export function SiteFooter() { return <footer className="bg-slate-950 text-white"><div className="container-shell grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]"><div><div className="mb-5 flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-500 font-extrabold">{siteConfig.initials}</span><div><p className="font-bold">{siteConfig.name}</p><p className="text-sm text-slate-400">AI Marketing Expert</p></div></div><p className="max-w-sm leading-7 text-slate-400">Practical AI and digital marketing strategies for more leads, stronger conversions, and sustainable business growth.</p><BookingLink compact className="mt-6" /></div><div><p className="footer-title">Navigate</p><div className="footer-links">{[["About", "/about"], ["Services", "/services"], ["Insights", "/blog"], ["Contact", "/contact"]].map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</div></div><div><p className="footer-title">Popular services</p><div className="footer-links">{services.slice(0, 4).map((service) => <Link key={service.slug} href={`/services#${service.slug}`}>{service.title}</Link>)}</div></div></div><div className="border-t border-white/10"><div className="container-shell flex flex-col gap-3 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between"><p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p><div className="flex gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div></div></div></footer>; }
+import { navigation, serviceLinks, siteConfig } from "@/lib/site-config";
+
+export function SiteFooter(){
+  const socialLinks = Object.entries(siteConfig.social).filter(([,href])=>Boolean(href));
+  return <footer className="site-footer"><div className="site-container footer-grid">
+    <div className="footer-brand"><Link className="footer-logo-link" href="/" aria-label="Smile With Sithar home"><Image className="footer-logo" src="/images/sithar-logo.png" alt="Smile With Sithar" width={742} height={336} /></Link><p>Dentistry, dental outreach, purposeful learning, and practical ideas that help more people.</p><p className="footer-note">Learn with purpose. Share with care.</p></div>
+    <div><h2>Navigate</h2>{navigation.map((item)=><Link key={item.href} href={item.href}>{item.label}</Link>)}</div>
+    <div><h2>Services</h2>{serviceLinks.map((item)=><Link key={item.href} href={item.href}>{item.label}</Link>)}</div>
+    <div><h2>Connect</h2>{socialLinks.length ? socialLinks.map(([name,href])=><a key={name} href={href} target="_blank" rel="noreferrer">{name[0].toUpperCase()+name.slice(1)}</a>) : <p className="placeholder-copy">Social profiles can be added in the site configuration.</p>}</div>
+  </div><div className="site-container footer-bottom"><span>© {new Date().getFullYear()} Sithar. All rights reserved.</span><span>Dentistry · Dental Outreach · AI Learning</span></div></footer>;
+}

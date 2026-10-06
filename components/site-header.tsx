@@ -1,10 +1,29 @@
-"use client";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import { BookingLink } from "@/components/booking-link";
-import { siteConfig } from "@/lib/site-content";
-import { cn } from "@/lib/utils";
-const links = [["Home", "/"], ["About", "/about"], ["Services", "/services"], ["Insights", "/blog"], ["Contact", "/contact"]] as const;
-export function SiteHeader() { const [open, setOpen] = useState(false); const pathname = usePathname(); return <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl"><div className="container-shell flex h-[76px] items-center justify-between gap-6"><Link href="/" className="group flex items-center gap-3" aria-label={`${siteConfig.name} home`}><span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-950 text-sm font-extrabold text-white shadow-sm ring-1 ring-white/10">{siteConfig.initials}</span><span className="leading-tight"><span className="block font-bold tracking-tight text-slate-950">{siteConfig.name}</span><span className="block text-xs font-medium text-slate-500">AI Marketing Expert</span></span></Link><nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">{links.map(([label, href]) => <Link key={href} href={href} className={cn("nav-link", pathname === href && "bg-slate-100 text-slate-950")}>{label}</Link>)}</nav><div className="hidden lg:block"><BookingLink compact /></div><button className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-slate-900 lg:hidden" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? "Close menu" : "Open menu"}>{open ? <X /> : <Menu />}</button></div><div id="mobile-navigation" className={cn("grid transition-[grid-template-rows] duration-300 lg:hidden", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}><div className="overflow-hidden"><nav className="container-shell flex flex-col gap-1 border-t border-slate-100 py-5" aria-label="Mobile navigation">{links.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100">{label}</Link>)}<div onClick={() => setOpen(false)}><BookingLink className="mt-3 justify-center" /></div></nav></div></div></header>; }
+import { ChevronDown, Menu } from "lucide-react";
+import { BookingLink } from "./booking-link";
+import { navigation, serviceLinks } from "@/lib/site-config";
+
+export function SiteHeader(){
+  return <header className="site-header">
+    <div className="nav-wrap site-container">
+      <Link className="brand-logo-link" href="/" aria-label="Smile With Sithar home">
+        <Image className="brand-logo" src="/images/sithar-logo.png" alt="Smile With Sithar" width={742} height={336} priority />
+      </Link>
+      <nav className="desktop-nav" aria-label="Primary navigation">
+        {navigation.map((item)=> item.label === "Services" ?
+          <div className="nav-dropdown" key={item.href}><Link href={item.href}>{item.label}<ChevronDown size={14}/></Link><div className="dropdown-panel">{serviceLinks.map((service)=><Link key={service.href} href={service.href}>{service.label}<span>Explore service</span></Link>)}</div></div>
+          : <Link key={item.href} href={item.href}>{item.label}</Link>)}
+      </nav>
+      <BookingLink className="button button-small" showIcon>Connect With Me</BookingLink>
+      <details className="mobile-nav">
+        <summary aria-label="Open navigation"><Menu size={22}/></summary>
+        <div className="mobile-panel">
+          {navigation.map((item)=><Link key={item.href} href={item.href}>{item.label}</Link>)}
+          <div className="mobile-services">{serviceLinks.map((item)=><Link key={item.href} href={item.href}>{item.label}</Link>)}</div>
+          <BookingLink className="button button-primary">Connect With Me</BookingLink>
+        </div>
+      </details>
+    </div>
+  </header>;
+}

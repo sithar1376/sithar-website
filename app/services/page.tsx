@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
+import { PageHero } from "@/components/page-hero";
+import { ServiceCard } from "@/components/service-card";
+import { ConsultationCTA } from "@/components/consultation-cta";
 import { BookingLink } from "@/components/booking-link";
-import { ConsultationCTA, PageHero, SectionHeading } from "@/components/shared";
-import { services } from "@/lib/site-content";
-export const metadata: Metadata = { title: "AI-Powered Digital Marketing Services", description: "AI marketing strategy, lead generation, automation, content, SEO, conversion optimization, and analytics for growing businesses.", alternates: { canonical: "/services" } };
-export default function ServicesPage() { return <main id="main-content"><PageHero eyebrow="Services" title="AI-powered digital marketing services designed to grow your business." text="Proven marketing principles meet practical AI tools to improve efficiency, generate stronger opportunities, and create a more connected growth system." /><section className="section-pad"><div className="container-shell"><SectionHeading eyebrow="What we can improve" title="Choose the business problem—not the buzzword." text="Services are flexible and editable. The right engagement is shaped around your goals, stage, resources, and the bottlenecks holding growth back." /><div className="mt-12 grid gap-6 lg:grid-cols-2">{services.map((service, index) => { const Icon = service.icon; return <article key={service.slug} id={service.slug} className="scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"><div className="flex items-start justify-between gap-4"><span className="icon-box"><Icon className="h-5 w-5" /></span><span className="text-xs font-black tracking-widest text-slate-300">{String(index + 1).padStart(2, "0")}</span></div><h2 className="mt-7 text-2xl font-bold tracking-tight text-slate-950">{service.title}</h2><p className="mt-3 text-lg leading-8 text-slate-600">{service.summary}</p><div className="mt-7 grid gap-5 border-t border-slate-100 pt-6 sm:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-wider text-slate-400">The problem</p><p className="mt-2 text-sm leading-6 text-slate-600">{service.problem}</p></div><div><p className="text-xs font-bold uppercase tracking-wider text-slate-400">How I help</p><p className="mt-2 text-sm leading-6 text-slate-600">{service.approach}</p></div></div><div className="mt-6 flex flex-wrap gap-2">{service.benefits.map((benefit) => <span key={benefit} className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800"><Check className="h-3.5 w-3.5" />{benefit}</span>)}</div>{[1, 5, 9].includes(index) && <BookingLink compact className="mt-7" />}</article>; })}</div></div></section><ConsultationCTA title="Not sure which service fits? Start with the business goal." text="In a free consultation, we’ll examine your current marketing, identify the most important constraint, and decide which next step is worth your attention." /></main>; }
+import { services } from "@/data/services";
+
+export const metadata: Metadata = {
+  title: "Dentistry, Outreach & Learning Focus Areas",
+  description: "Explore Sithar's focus on dental outreach, oral health education, AI and digital learning, and sharing useful knowledge with others.",
+  alternates: { canonical: "/services" },
+  openGraph: { title: "Dentistry, Outreach & Learning", description: "Practical focus areas shaped by dentistry, community service, and purposeful learning.", url: "/services" },
+};
+
+export default function ServicesPage(){return <main>
+  <PageHero eyebrow="FOCUS AREAS" title="Where dentistry, outreach, and modern learning come together" description="I am combining clinical care, community outreach, and new digital skills to find better ways to connect, educate, and help." breadcrumbs={[{label:"Home",href:"/"},{label:"Focus Areas"}]}/>
+  <section className="section site-container"><div className="split-heading"><p className="eyebrow">THE GOAL IS SIMPLE</p><h2>Learn with purpose. Reach more people. Share what helps.</h2><p>Each focus area supports the same mission: helping make oral healthcare knowledge and support more accessible.</p></div><div className="services-overview-grid">{services.map(service=><ServiceCard key={service.slug} service={service} detailed/>)}</div></section>
+  <section className="section service-fit"><div className="site-container service-fit-inner"><div><p className="eyebrow">LET&apos;S CONNECT</p><h2>Have an idea, question, or shared interest?</h2><p>I&apos;d be glad to hear about your work in dentistry, outreach, education, or responsible use of modern digital tools.</p></div><BookingLink className="button button-primary">Start a Conversation</BookingLink></div></section>
+  <ConsultationCTA compact/>
+</main>}

@@ -1,11 +1,55 @@
 "use client";
-import { useState } from "react";
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
-type Errors = Partial<Record<"name" | "email" | "need" | "message", string>>;
-export function ContactForm() {
-  const [errors, setErrors] = useState<Errors>({}); const [status, setStatus] = useState<"idle" | "loading" | "demo">("idle");
-  function submit(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const data = new FormData(event.currentTarget); const next: Errors = {}; if (!String(data.get("name") || "").trim()) next.name = "Please enter your name."; if (!/^\S+@\S+\.\S+$/.test(String(data.get("email") || ""))) next.email = "Enter a valid email address."; if (!String(data.get("need") || "")) next.need = "Choose the area you need help with."; if (String(data.get("message") || "").trim().length < 20) next.message = "Please add at least 20 characters."; setErrors(next); if (Object.keys(next).length) return; setStatus("loading"); window.setTimeout(() => setStatus("demo"), 500); }
-  const field = "mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-100";
-  return <form onSubmit={submit} noValidate className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" data-event="contact_form_submit"><div className="grid gap-5 sm:grid-cols-2"><Field label="Name" htmlFor="name" error={errors.name}><input id="name" name="name" autoComplete="name" className={field} aria-invalid={!!errors.name} /></Field><Field label="Email" htmlFor="email" error={errors.email}><input id="email" name="email" type="email" autoComplete="email" className={field} aria-invalid={!!errors.email} /></Field><Field label="Phone (optional)" htmlFor="phone"><input id="phone" name="phone" type="tel" autoComplete="tel" className={field} /></Field><Field label="Business name" htmlFor="company"><input id="company" name="company" autoComplete="organization" className={field} /></Field><Field label="Website (optional)" htmlFor="website"><input id="website" name="website" type="url" placeholder="https://" className={field} /></Field><Field label="What do you need help with?" htmlFor="need" error={errors.need}><select id="need" name="need" defaultValue="" className={field} aria-invalid={!!errors.need}><option value="" disabled>Select an area</option><option>AI marketing strategy</option><option>Lead generation</option><option>Marketing automation</option><option>Content and SEO</option><option>Conversion optimization</option><option>Not sure yet</option></select></Field></div><div className="mt-5"><Field label="Tell me about your goals" htmlFor="message" error={errors.message}><textarea id="message" name="message" rows={5} className={field} placeholder="What would you like your marketing to achieve?" aria-invalid={!!errors.message} /></Field></div><div className="hidden" aria-hidden="true"><label htmlFor="company-url">Leave this field empty</label><input id="company-url" name="company-url" tabIndex={-1} autoComplete="off" /></div><button type="submit" disabled={status === "loading"} className="button-primary mt-6 w-full justify-center sm:w-auto">{status === "loading" ? <><Loader2 className="h-4 w-4 animate-spin" />Checking details…</> : "Send Consultation Request"}</button><p className="mt-4 text-sm leading-6 text-slate-500">This form is in preview mode and does not send email yet. Connect your preferred form or email provider before launch.</p>{status === "demo" && <div className="mt-5 flex gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-900" role="status"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />Your details are valid. Connect a form provider to enable delivery.</div>}</form>;
+
+import { cloneElement, useState, type ReactElement } from "react";
+import { AlertCircle, CheckCircle2, LoaderCircle, Send } from "lucide-react";
+
+type Status = { type:"idle"|"loading"|"success"|"error"|"unconfigured"; message?:string };
+const initial = { fullName:"", businessName:"", email:"", phone:"", website:"", businessType:"", service:"", challenge:"", message:"", company:"" };
+
+export function ContactForm({endpoint}:{endpoint?:string}){
+  const [values,setValues]=useState(initial); const [errors,setErrors]=useState<Record<string,string>>({}); const [status,setStatus]=useState<Status>({type:"idle"});
+  const set=(field:keyof typeof initial)=>(event:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>)=>setValues({...values,[field]:event.target.value});
+  function validate(){const next:Record<string,string>={}; if(!values.fullName.trim())next.fullName="Please enter your full name.";if(!values.businessName.trim())next.businessName="Please enter your organization, community, or N/A.";if(!/^\S+@\S+\.\S+$/.test(values.email))next.email="Please enter a valid email address.";if(!values.businessType.trim())next.businessType="Please tell me about your work or interest.";if(!values.service)next.service="Please choose a focus area.";if(!values.challenge.trim())next.challenge="Please share what you would like to discuss.";setErrors(next);return Object.keys(next).length===0;}
+  async function submit(event:React.FormEvent){event.preventDefault();if(values.company)return;if(!validate()){setStatus({type:"error",message:"Please check the highlighted fields."});return;}setStatus({type:"loading"});
+    if(!endpoint){await new Promise((resolve)=>setTimeout(resolve,650));setStatus({type:"unconfigured",message:"Your details look ready. Message delivery has not been connected yet, so nothing was sent. You can still use the connection option above."});return;}
+    const payload={
+      name:values.fullName.trim(),
+      email:values.email.trim(),
+      organization:values.businessName.trim(),
+      phone:values.phone.trim(),
+      website:values.website.trim(),
+      work_or_interest:values.businessType.trim(),
+      focus_area:values.service,
+      discussion:values.challenge.trim(),
+      message:values.message.trim(),
+      _subject:`New Smile With Sithar message from ${values.fullName.trim()}`,
+      _template:"table",
+      _url:`${window.location.origin}/contact`,
+      _honey:values.company,
+    };
+    try{const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload)});const result=await response.json().catch(()=>null) as {success?:boolean|string}|null;if(!response.ok||result?.success===false||result?.success==="false")throw new Error("Request failed");setValues(initial);setStatus({type:"success",message:"Thanks—your message has been sent. Sithar will follow up as soon as possible."});}catch{setStatus({type:"error",message:"Your message could not be sent. Please try again or use the connection option above."});}
+  }
+  return <form className="contact-form" onSubmit={submit} noValidate aria-busy={status.type==="loading"}>
+    <div className="form-heading"><p className="eyebrow">SEND A MESSAGE</p><h2>Introduce yourself</h2><p>Share what you are working on, what interests you, and what you would like to discuss.</p></div>
+    <div className="form-grid">
+      <Field label="Full Name" required error={errors.fullName}><input name="name" value={values.fullName} onChange={set("fullName")} autoComplete="name" /></Field>
+      <Field label="Organization, community, or N/A" required error={errors.businessName}><input name="organization" value={values.businessName} onChange={set("businessName")} autoComplete="organization" /></Field>
+      <Field label="Email" required error={errors.email}><input name="email" type="email" value={values.email} onChange={set("email")} autoComplete="email" /></Field>
+      <Field label="Phone Number" hint="Optional"><input name="phone" type="tel" value={values.phone} onChange={set("phone")} autoComplete="tel" /></Field>
+      <Field label="Website or profile" hint="Optional"><input name="website" type="url" placeholder="https://" value={values.website} onChange={set("website")} autoComplete="url" /></Field>
+      <Field label="Tell me about your work or interest" required error={errors.businessType}><input name="work_or_interest" value={values.businessType} onChange={set("businessType")} /></Field>
+      <Field label="What would you like to connect about?" required error={errors.service} wide><select name="focus_area" value={values.service} onChange={set("service")}><option value="">Choose a focus area</option><option>Dental Outreach</option><option>Oral Health Education</option><option>AI &amp; Digital Learning</option><option>Sharing &amp; Supporting Others</option><option>Another Idea</option></select></Field>
+      <Field label="What would you like to discuss?" required error={errors.challenge} wide><textarea name="discussion" rows={4} value={values.challenge} onChange={set("challenge")} /></Field>
+      <Field label="Message" hint="Optional" wide><textarea name="message" rows={5} value={values.message} onChange={set("message")} /></Field>
+      <div className="honeypot" aria-hidden="true"><label>Company<input name="_honey" tabIndex={-1} autoComplete="off" value={values.company} onChange={set("company")}/></label></div>
+    </div>
+    {status.type!=="idle"&&status.type!=="loading"&&<div className={`form-status ${status.type}`} role="status">{status.type==="success"?<CheckCircle2 size={19}/>:<AlertCircle size={19}/>}<span>{status.message}</span></div>}
+    <button className="button button-primary form-submit" disabled={status.type==="loading"} type="submit">{status.type==="loading"?<><LoaderCircle className="spin" size={18}/>Sending your message…</>:<>Send My Message<Send size={17}/></>}</button>
+    <p className="spam-note">Your information will only be used to respond to your enquiry.</p>
+  </form>;
 }
-function Field({ label, htmlFor, error, children }: { label: string; htmlFor: string; error?: string; children: React.ReactNode }) { return <div><label htmlFor={htmlFor} className="text-sm font-bold text-slate-800">{label}</label>{children}{error && <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-red-700"><AlertCircle className="h-4 w-4" />{error}</p>}</div>; }
+
+function Field({label,required,hint,error,wide,children}:{label:string;required?:boolean;hint?:string;error?:string;wide?:boolean;children:ReactElement<Record<string, unknown>>}){
+  const id=label.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  return <div className={`field ${wide?"field-wide":""}`}><label htmlFor={id}>{label}{required&&<span aria-hidden="true"> *</span>}{hint&&<small>{hint}</small>}</label>{cloneElement(children,{id,"aria-invalid":Boolean(error),"aria-describedby":error?`${id}-error`:undefined})}{error&&<span id={`${id}-error`} className="field-error">{error}</span>}</div>;
+}
